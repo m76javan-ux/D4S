@@ -1,0 +1,31 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function: Is the user logged in?
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Helper function: Does the UID match the document?
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // 📚 Public Learning Content (Read-only for users, Admin-only for writes)
+    match /vocabulary/{docId} { allow read: if true; allow write: if false; }
+    match /grammar/{docId} { allow read: if true; allow write: if false; }
+    match /lessons/{docId} { allow read: if true; allow write: if false; }
+    match /practice_exercises/{docId} { allow read: if true; allow write: if false; }
+
+    // 👤 User Progress & Profiles (Private to the owner)
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+      
+      // Allows access to subcollections like /users/{uid}/srs_items
+      match /{allSubcollections=**} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+  }
+}

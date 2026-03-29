@@ -1,0 +1,137 @@
+{
+  "entities": {
+    "UserProgress": {
+      "title": "User Progress",
+      "description": "Tracks the user's proficiency and learning history.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "level": { "type": "string", "enum": ["A1", "A2", "B1", "B2", "C1", "C2"] },
+        "xp": { "type": "number" },
+        "streak": { "type": "number" },
+        "hearts": { "type": "number" },
+        "v2Accuracy": { "type": "number" },
+        "deHetAccuracy": { "type": "number" },
+        "vocabAccuracy": { "type": "number" },
+        "wordsLearned": { "type": "number" },
+        "struggleAreas": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "completedLessons": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "updatedAt": { "$ref": "Timestamp" }
+      },
+      "required": ["userId", "level", "xp", "streak", "hearts", "updatedAt"]
+    },
+    "VocabularyItem": {
+      "title": "Vocabulary Item",
+      "description": "A Dutch word with Farsi translation.",
+      "type": "object",
+      "properties": {
+        "dutch": { "type": "string" },
+        "farsi": { "type": "string" },
+        "type": { "type": "string", "enum": ["word"] },
+        "createdBy": { "type": "string" },
+        "createdAt": { "$ref": "Timestamp" }
+      },
+      "required": ["dutch", "farsi", "type", "createdBy", "createdAt"]
+    },
+    "GrammarItem": {
+      "title": "Grammar Item",
+      "description": "A Dutch grammar rule with Farsi explanation.",
+      "type": "object",
+      "properties": {
+        "dutch": { "type": "string" },
+        "farsi": { "type": "string" },
+        "type": { "type": "string", "enum": ["grammar"] },
+        "createdBy": { "type": "string" },
+        "createdAt": { "$ref": "Timestamp" }
+      },
+      "required": ["dutch", "farsi", "type", "createdBy", "createdAt"]
+    },
+    "Lesson": {
+      "title": "Lesson",
+      "description": "A structured Dutch lesson.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "exercise": { "type": "string" },
+        "nextLesson": { "type": "string" }
+      },
+      "required": ["title", "content", "exercise"]
+    },
+    "AICache": {
+      "title": "AI Cache",
+      "description": "Cached AI responses.",
+      "type": "object",
+      "properties": {
+        "cacheKey": { "type": "string" },
+        "response": { "type": "string" },
+        "created": { "type": "number" }
+      },
+      "required": ["cacheKey", "response", "created"]
+    },
+    "Exercise": {
+      "title": "Exercise",
+      "description": "A language learning exercise.",
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["flashcard", "mcq", "cloze", "reorder"] },
+        "question": { "type": "string" },
+        "answer": { "type": "string" },
+        "options": { "type": "array", "items": { "type": "string" } },
+        "explanation": { "type": "string" },
+        "dutch": { "type": "string" },
+        "farsi": { "type": "string" },
+        "level": { "type": "string" }
+      },
+      "required": ["type", "question", "answer"]
+    },
+    "UserSRS": {
+      "title": "User SRS",
+      "description": "Tracks SRS data for a specific item for a user.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "itemId": { "type": "string" },
+        "itemType": { "type": "string", "enum": ["vocabulary", "grammar"] },
+        "interval": { "type": "number" },
+        "easeFactor": { "type": "number" },
+        "repetitions": { "type": "number" },
+        "dueDate": { "$ref": "Timestamp" },
+        "lastReviewed": { "$ref": "Timestamp" }
+      },
+      "required": ["userId", "itemId", "itemType", "interval", "easeFactor", "repetitions", "dueDate"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/progress/current": {
+      "schema": "UserProgress",
+      "description": "The current progress of a user."
+    },
+    "/users/{userId}/srs/{itemId}": {
+      "schema": "UserSRS",
+      "description": "SRS data for a user's items."
+    },
+    "/vocabulary": {
+      "schema": "VocabularyItem",
+      "description": "The vocabulary database."
+    },
+    "/grammar": {
+      "schema": "GrammarItem",
+      "description": "The grammar database."
+    },
+    "/lessons": {
+      "schema": "Lesson",
+      "description": "The lessons database."
+    },
+    "/ai_cache": {
+      "schema": "AICache",
+      "description": "The AI response cache."
+    }
+  }
+}

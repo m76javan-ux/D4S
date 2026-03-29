@@ -1,0 +1,5 @@
+{
+  "name": "Dutch Farsi Mentor",
+  "description": "A comprehensive language learning platform for Farsi speakers to master Dutch grammar, vocabulary, and idioms with AI-powered practice and tutoring.",
+  "requestFramePermissions": ["microphone"]
+}
